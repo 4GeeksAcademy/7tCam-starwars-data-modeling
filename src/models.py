@@ -15,61 +15,44 @@ class User(Base):
     last_name = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False)
     password = Column(String(250), nullable=False)
-    favoritesses = relationship('Favorites', backref='user', lazy=True)
-
-# class User(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(50), nullable=False)
-#     addresses = db.relationship('Address', backref='person', lazy=True)
+    favorites = relationship('Favorites', backref='user', lazy=True)
 
 class Favorites(Base):
     __tablename__ = 'favorites'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    charactersses = relationship('Characters', backref='favorites', lazy=True)
-    Planetsses = relationship('Planets', backref='favorites', lazy=True)
-    vehiclesses = relationship('Vehicles', backref='favorites', lazy=True)
+    characters_id = Column(Integer, ForeignKey('characters.id'), nullable=False)
+    planets_id = Column(Integer, ForeignKey('planets.id'), nullable=False)
+    vehicles_id = Column(Integer, ForeignKey('vehicles.id'), nullable=False)
 
-
-    # name_favorites = Column(String(250))
-
-    # person_id = Column(Integer, ForeignKey('person.id'))
-    # person = relationship(Person)
 class Characters(Base):
     __tablename__ = 'characters'
     id = Column(Integer, primary_key=True)
-    name_characters = Column(String(250))
+    name = Column(String(250), nullable=False)
     hair_color = Column(String(250))
     eyes_color = Column(String(250))
     gender = Column(String(250))
-    Favorites_id = Column(Integer, ForeignKey('favorites.id'), nullable=False)
-
-    # class Address(db.Model):
-    # id = db.Column(db.Integer, primary_key=True)
-    # email = db.Column(db.String(120), nullable=False)
-    # person_id = db.Column(db.Integer, db.ForeignKey('person.id'),
-    #     nullable=False)
+    planets_id = Column(Integer, ForeignKey('planets.id'), nullable=False)
+    favorites = relationship('Favorites', backref='characters', lazy=True)
+    vehicles = relationship('Vehicles', backref='characters', lazy=True)
 
 class Planets(Base):
     __tablename__ = 'planets'
     id = Column(Integer, primary_key=True)
-    name_planets = Column(String(250))
+    name = Column(String(250))
     population = Column(String(250))
     terrain = Column(String(250))
-    Favorites_id = Column(Integer, ForeignKey('favorites.id'), nullable=False)
-
+    favorites = relationship('Favorites', backref='planets', lazy=True)
+    characters = relationship('Characters', backref='planets', lazy=True)
+    vehicles = relationship('Vehicles', backref='planets', lazy=True)
 
 class Vehicles(Base):
     __tablename__ = 'vehicles'
     id = Column(Integer, primary_key=True)
-    name_vehicles = Column(String(250))
-    Favorites_id = Column(Integer, ForeignKey('favorites.id'), nullable=False)
-
-  
-    
-
+    name = Column(String(250))
+    planets_id = Column(Integer, ForeignKey('planets.id'), nullable=False)
+    characters_id = Column(Integer, ForeignKey('characters.id'), nullable=False)
+    favorites = relationship('Favorites', backref='vehicles', lazy=True)
 
     def to_dict(self):
         return {}
